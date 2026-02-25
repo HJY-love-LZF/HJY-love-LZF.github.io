@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<!-- saved from url=(0063)file:///C:/Users/%E5%8D%8E%E4%B8%BA/OneDrive/Desktop/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>HJY love LZF forever</title>
     <style>
-        /* 基础重置与滚动捕捉 */
         * {
             margin: 0;
             padding: 0;
@@ -20,7 +19,6 @@
             font-family: 'Segoe UI', 'Arial', 'Helvetica', sans-serif;
         }
 
-        /* 隐藏滚动条（视觉干净） */
         body::-webkit-scrollbar {
             display: none;
         }
@@ -29,7 +27,6 @@
             scrollbar-width: none;
         }
 
-        /* 固定粒子画布 */
         #loveParticles {
             position: fixed;
             top: 0;
@@ -41,25 +38,23 @@
             pointer-events: none;
         }
 
-        /* 每一屏 */
         .section {
             position: relative;
             width: 100%;
             height: 100vh;
             scroll-snap-align: start;
             scroll-snap-stop: always;
-            background-color: transparent; /* 颜色由各自屏自己设置 */
+            background-color: transparent;
         }
 
         .section-red {
-            background-color: #FF3B3B;      /* 纯红 */
+            background-color: #FF3B3B;
         }
 
         .section-black {
-            background-color: #000000;      /* 纯黑 */
+            background-color: #000000;
         }
 
-        /* 内容容器：相对定位，z-index高于粒子 */
         .content {
             position: relative;
             z-index: 2;
@@ -68,7 +63,7 @@
             display: flex;
             flex-direction: column;
             color: white;
-            pointer-events: none;            /* 穿透点击，让引导箭头可点(单独设置) */
+            pointer-events: none;
         }
 
         /* ========== 第一页 ========== */
@@ -108,7 +103,6 @@
             opacity: 0.95;
         }
 
-        /* 向下引导标识（小箭头） */
         .scroll-indicator {
             position: absolute;
             bottom: 30px;
@@ -139,15 +133,14 @@
         .second-page-content {
             display: flex;
             flex-direction: column;
-            padding: 0 0 20px 0;        /* 底部预留20px，确保竖线底边不贴边 */
+            padding: 0 0 20px 0;
             height: 100%;
         }
 
-        /* “关于我们”标题：上移，通过margin-top控制顶部距离，margin-bottom=0 */
         .about-title {
             text-align: center;
-            margin: 5vh 0 0 0;           /* 距离顶部5vh，让出呼吸空间 */
-            font-size: clamp(2rem, 7vw, 4rem);   /* 略小一点 */
+            margin: 5vh 0 0 0;
+            font-size: clamp(2rem, 7vw, 4rem);
             font-weight: 400;
             color: white;
             text-shadow: 0 0 20px rgba(255,255,255,0.7), 0 0 40px #fff;
@@ -155,32 +148,29 @@
             animation: whiteGlow 3s infinite alternate;
         }
 
-        /* 中间区域：flex:1，margin-top:20px 使其与标题底部相距20px */
         .middle-area {
             flex: 1;
             position: relative;
-            margin-top: 20px;             /* 标题底部与中间区域顶部距离20px */
+            margin-top: 20px;
         }
 
-        /* 发光的竖线 */
         .glowing-line {
             position: absolute;
             left: 50%;
             top: 0;
             transform: translateX(-50%);
             width: 2px;
-            height: 100%;                  /* 高度充满middle-area，因此顶端与middle-area顶部齐平，底端与底部齐平 */
+            height: 100%;
             background: linear-gradient(to bottom, transparent, white, transparent);
             box-shadow: 0 0 25px 5px rgba(255,255,255,0.8);
             border-radius: 2px;
             z-index: 3;
         }
 
-        /* 左右文字共用样式 */
         .side-text {
             position: absolute;
-            top: 0;                         /* 顶部与竖线上端对齐（即middle-area顶部） */
-            font-size: clamp(1.8rem, 6vw, 3.5rem);   /* 略小于标题 */
+            top: 0;
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
             font-weight: 500;
             color: white;
             text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px #ffffff;
@@ -189,39 +179,80 @@
             animation: whiteGlow 3s infinite alternate;
         }
 
-        /* 左侧 HJY */
         .left-hjy {
-            right: 55%;                    /* 从右侧向左定位，确保在竖线左边 */
-            transform: translateY(0);        /* 顶部对齐，无需Y偏移 */
-            /* 保证文字不超出，通过右边界控制 */
-        }
-
-        /* 右侧 LZF */
-        .right-lzf {
-            left: 55%;                      /* 从左侧向右定位 */
+            right: 55%;
             transform: translateY(0);
         }
 
-        /* 响应式调整：小屏时避免重叠 */
-        @media (max-width: 600px) {
+        .right-lzf {
+            left: 55%;
+            transform: translateY(0);
+        }
+
+        /* 左侧信息卡片：右对齐，位于HJY下方 */
+        .info-left {
+            position: absolute;
+            right: 55%;                     /* 与 left-hjy 对齐 */
+            top: 4rem;                      /* 与 HJY 保持适当间距 */
+            width: auto;
+            max-width: 40vw;                 /* 限制最大宽度 */
+            text-align: right;
+            color: white;
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+            line-height: 1.6;
+            text-shadow: 0 0 8px rgba(255,255,255,0.5);
+            z-index: 3;
+            pointer-events: none;
+            word-break: break-word;          /* 防止长单词溢出 */
+        }
+
+        .info-item {
+            margin-bottom: 0.3rem;
+            white-space: nowrap;              /* 短信息不换行 */
+        }
+
+        /* 夸赞段落（描写HJY本人） */
+        .info-desc {
+            margin-top: 1rem;
+            white-space: normal;
+            word-break: break-word;
+            text-align: right;
+            max-width: 100%;
+            font-size: clamp(0.9rem, 3vw, 1.3rem);
+            line-height: 1.5;
+            border-top: 1px dashed rgba(255,255,255,0.3);
+            padding-top: 0.8rem;
+        }
+
+        /* 响应式优化：小屏时调整位置和字体，避免出画 */
+        @media (max-width: 800px) {
             .left-hjy {
                 right: 60%;
-                font-size: clamp(1.5rem, 5vw, 2.5rem);
+            }
+            .info-left {
+                right: 60%;
+                max-width: 35vw;
+                font-size: 0.95rem;
+            }
+            .info-item {
+                white-space: normal;           /* 允许换行以防溢出 */
             }
             .right-lzf {
                 left: 60%;
-                font-size: clamp(1.5rem, 5vw, 2.5rem);
-            }
-            .about-title {
-                font-size: clamp(1.8rem, 6vw, 3rem);
-                margin-top: 3vh;
-            }
-            .middle-area {
-                margin-top: 15px;            /* 小屏适当缩小间距 */
             }
         }
 
-        /* 发光动画（白色系） */
+        @media (max-width: 500px) {
+            .info-left {
+                right: 58%;
+                max-width: 40vw;
+                font-size: 0.85rem;
+            }
+            .info-desc {
+                font-size: 0.8rem;
+            }
+        }
+
         @keyframes whiteGlow {
             0% { text-shadow: 0 0 20px rgba(255,255,255,0.5), 0 0 40px #ffffff; }
             100% { text-shadow: 0 0 30px rgba(255,255,255,1), 0 0 70px #ffffff; }
@@ -235,49 +266,54 @@
 </head>
 <body>
 
-    <!-- 固定粒子画布（白色粒子） -->
-    <canvas id="loveParticles"></canvas>
+    <canvas id="loveParticles" width="340" height="750"></canvas>
 
-    <!-- 第一屏：纯红背景 -->
+    <!-- 第一屏 -->
     <section class="section section-red">
         <div class="content first-page-content">
             <div class="top-line">HJY love LZF</div>
             <div class="separator"></div>
-            <div class="bottom-line">forever & always</div>
+            <div class="bottom-line">forever &amp; always</div>
         </div>
         <div class="scroll-indicator">
-            <a href="#page2">▼</a>
+            <a href="file:///C:/Users/%E5%8D%8E%E4%B8%BA/OneDrive/Desktop/index.html#page2">▼</a>
         </div>
     </section>
 
-    <!-- 第二屏：纯黑背景，ID用于锚点 -->
+    <!-- 第二屏 -->
     <section class="section section-black" id="page2">
         <div class="content second-page-content">
-            <!-- “关于我们”标题（上移） -->
             <div class="about-title">关于我们</div>
-            <!-- 中间区域：包含竖线和两侧文字，margin-top:20px保证与标题距离 -->
             <div class="middle-area">
-                <!-- 发光的竖线（高度100%，顶端即middle-area顶部） -->
                 <div class="glowing-line"></div>
-                <!-- 左侧 HJY (顶部与竖线上端对齐) -->
+                <!-- 左侧 HJY 标题 -->
                 <div class="side-text left-hjy">HJY</div>
-                <!-- 右侧 LZF -->
+                <!-- 右侧 LZF 标题 -->
                 <div class="side-text right-lzf">LZF</div>
+
+                <!-- 左侧信息卡片（描写HJY本人，右对齐） -->
+                <div class="info-left">
+                    <div class="info-item">性别：男</div>
+                    <div class="info-item">IP：中国吉林长春</div>
+                    <div class="info-item">MBTI：ENFJ</div>
+                    <div class="info-item">学校：长春市净月实验中学</div>
+                    <div class="info-desc">我叫HJY，来自吉林长春，是一名ENFJ人格的男生。目前在长春市净月实验中学就读。朋友们说我长得还算帅气，最重要的是特别有礼貌，对人总是谦逊温和。我的声音不错，说话不急不慢，很多人说听我说话很治愈。作为ENFJ，我能敏锐察觉别人的情绪，默默关心身边的人。在接下来的日子里我会更用心的呵护你
+</div>
+                </div>
+                <!-- 右侧 LZF 下方留白，可根据需要添加 -->
             </div>
-            <!-- 底部由父容器padding-bottom:20px留白，无需额外元素 -->
         </div>
     </section>
 
     <script>
         (function() {
-            // ---------- 粒子效果：纯白色/灰白色粒子 ----------
             const canvas = document.getElementById('loveParticles');
             const ctx = canvas.getContext('2d');
 
             let particles = [];
             let width = window.innerWidth;
             let height = window.innerHeight;
-            const PARTICLE_COUNT = 160;            // 稍多一点，白色更轻盈
+            const PARTICLE_COUNT = 160;
 
             class Particle {
                 constructor(x, y, vx, vy, radius, color) {
@@ -291,15 +327,13 @@
                 for (let i = 0; i < PARTICLE_COUNT; i++) {
                     const x = Math.random() * width;
                     const y = Math.random() * height;
-                    const vx = (Math.random() - 0.5) * 0.3;   // 更慢，更静谧
+                    const vx = (Math.random() - 0.5) * 0.3;
                     const vy = (Math.random() - 0.5) * 0.3;
-                    const radius = Math.random() * 4 + 2;      // 2~6px
+                    const radius = Math.random() * 4 + 2;
                     
-                    // 白色粒子：饱和度为0，亮度70%~100%，透明度0.3~0.8
-                    const lightness = Math.floor(Math.random() * 30 + 70); // 70~100
-                    const alpha = Math.random() * 0.5 + 0.2;    // 0.2~0.7
-
-                    const color = `hsla(0, 0%, ${lightness}%, ${alpha})`;  // 纯白或灰白
+                    const lightness = Math.floor(Math.random() * 30 + 70);
+                    const alpha = Math.random() * 0.5 + 0.2;
+                    const color = `hsla(0, 0%, ${lightness}%, ${alpha})`;
                     
                     particles.push(new Particle(x, y, vx, vy, radius, color));
                 }
@@ -319,13 +353,12 @@
             }
 
             function drawParticles() {
-                ctx.clearRect(0, 0, width, height);   // 透明背景，露出下方section背景色
+                ctx.clearRect(0, 0, width, height);
                 particles.forEach(p => {
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                     ctx.fillStyle = p.color;
                     ctx.fill();
-                    // 淡淡光晕
                     if (p.radius > 3) {
                         ctx.beginPath();
                         ctx.arc(p.x, p.y, p.radius * 2, 0, Math.PI * 2);
@@ -339,7 +372,6 @@
                 particles.forEach(p => {
                     p.x += p.vx;
                     p.y += p.vy;
-                    // 环绕处理
                     if (p.x < 0) p.x = width;
                     if (p.x > width) p.x = 0;
                     if (p.y < 0) p.y = height;
@@ -364,5 +396,5 @@
             });
         })();
     </script>
-</body>
-</html>
+
+</body></html>
