@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>HJY love LZF forever</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* 纯红色背景，热烈纯粹 */
+            background: #FF3B3B;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', 'Arial', 'Helvetica', sans-serif;
+        }
+
+        /* 粒子画布，透明背景透出纯红 */
+        #loveParticles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 文字容器：垂直居中，列方向排列 */
+        .message {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            color: white;
+            text-align: center;
+            pointer-events: none;
+            padding: 0 1rem;
+        }
+
+        /* 上部分文字：HJY love LZF */
+        .top-line {
+            font-size: clamp(2rem, 8vw, 5rem);
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            animation: softGlow 3s infinite alternate;
+            margin-bottom: 0.5rem;   /* 与横线的间距 */
+            line-height: 1.2;
+        }
+
+        /* 优雅的分隔横线 */
+        .separator {
+            width: min(220px, 40%);
+            height: 2px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 4px;
+            margin: 0.5rem 0 1rem 0;   /* 上下间距 */
+            box-shadow: 0 0 12px rgba(255, 220, 180, 0.8);
+            backdrop-filter: blur(1px);
+        }
+
+        /* 下部分文字：forever & always */
+        .bottom-line {
+            font-size: clamp(1.6rem, 5vw, 3.5rem);
+            font-weight: 300;
+            font-style: italic;
+            white-space: nowrap;
+            animation: softGlow 3s infinite alternate;
+            line-height: 1.2;
+            opacity: 0.95;
+        }
+
+        /* 柔和呼吸光效 (应用于文字) */
+        @keyframes softGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 240, 210, 0.8), 0 0 40px #ff8a8a; }
+            100% { text-shadow: 0 0 30px rgba(255, 255, 220, 1), 0 0 60px #ff6f6f; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 粒子画布 (保持不变，暖色粒子与纯红背景交融) -->
+    <canvas id="loveParticles"></canvas>
+
+    <!-- 文字区域：两行 + 横线分隔 -->
+    <div class="message">
+        <div class="top-line">HJY love LZF</div>
+        <div class="separator"></div>
+        <div class="bottom-line">forever & always</div>
+    </div>
+
+    <script>
+        (function() {
+            const canvas = document.getElementById('loveParticles');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+            const PARTICLE_COUNT = 140;
+
+            class Particle {
+                constructor(x, y, vx, vy, radius, color) {
+                    this.x = x; this.y = y; this.vx = vx; this.vy = vy;
+                    this.radius = radius; this.color = color;
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    const x = Math.random() * width;
+                    const y = Math.random() * height;
+                    const vx = (Math.random() - 0.5) * 0.5;
+                    const vy = (Math.random() - 0.5) * 0.5;
+                    const radius = Math.random() * 5 + 2;
+                    const hue = Math.floor(Math.random() * 20);        // 0~19 红橙
+                    const saturation = Math.floor(Math.random() * 30 + 60);
+                    const lightness = Math.floor(Math.random() * 25 + 65);
+                    const alpha = Math.random() * 0.4 + 0.5;
+                    const color = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+                    particles.push(new Particle(x, y, vx, vy, radius, color));
+                }
+            }
+
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                if (particles.length > 0) {
+                    particles.forEach(p => {
+                        p.x = ((p.x % width) + width) % width;
+                        p.y = ((p.y % height) + height) % height;
+                    });
+                }
+            }
+
+            function drawParticles() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    if (p.radius > 4) {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius * 1.6, 0, Math.PI * 2);
+                        ctx.fillStyle = p.color.replace(/[\d\.]+\)$/, '0.15)');
+                        ctx.fill();
+                    }
+                });
+            }
+
+            function updateParticles() {
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0) p.x = width;
+                    if (p.x > width) p.x = 0;
+                    if (p.y < 0) p.y = height;
+                    if (p.y > height) p.y = 0;
+                });
+            }
+
+            function animate() {
+                updateParticles();
+                drawParticles();
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            window.addEventListener('load', () => {
+                resizeCanvas();
+                initParticles();
+                animate();
+            });
+        })();
+    </script>
+
+    <!-- 背景纯红已在body定义 -->
+</body>
+</html>
